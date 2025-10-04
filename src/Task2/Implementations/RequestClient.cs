@@ -30,12 +30,12 @@ public class RequestClient : ILibraryOperationHandler, IRequestClient
         }
     }
 
-    public Task<ResponseModel> SendAsync(RequestModel request, CancellationToken cancellationToken)
+    public async Task<ResponseModel> SendAsync(RequestModel request, CancellationToken cancellationToken)
     {
         var requestId = Guid.NewGuid();
         var tcs = new TaskCompletionSource<ResponseModel>();
 
-        CancellationTokenRegistration registration = cancellationToken.Register(() =>
+        await using CancellationTokenRegistration registration = cancellationToken.Register(() =>
         {
             if (_requests.TryRemove(requestId, out TaskCompletionSource<ResponseModel>? pending))
             {
@@ -47,7 +47,7 @@ public class RequestClient : ILibraryOperationHandler, IRequestClient
         {
             _requests.TryRemove(requestId, out TaskCompletionSource<ResponseModel>? _);
             tcs.TrySetCanceled(cancellationToken);
-            return tcs.Task;
+            return await tcs.Task;
         }
 
         _requests.TryAdd(requestId, tcs);
@@ -58,10 +58,9 @@ public class RequestClient : ILibraryOperationHandler, IRequestClient
         }
         catch (Exception e)
         {
-            registration.Dispose();
             HandleOperationError(requestId, e);
         }
 
-        return tcs.Task;
+        return await tcs.Task;
     }
 }

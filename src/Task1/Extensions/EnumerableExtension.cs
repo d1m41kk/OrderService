@@ -26,16 +26,8 @@ public static class EnumerableExtension
                 enumerators.Add(other.GetEnumerator());
             }
 
-            while (true)
+            while (MoveNextAllEnumerators(enumerators))
             {
-                foreach (IEnumerator<T> t in enumerators)
-                {
-                    if (!t.MoveNext())
-                    {
-                        yield break;
-                    }
-                }
-
                 T[] row = enumerators.Select(e => e.Current).ToArray();
 
                 yield return row;
@@ -48,5 +40,18 @@ public static class EnumerableExtension
                 enumerator.Dispose();
             }
         }
+    }
+
+    private static bool MoveNextAllEnumerators<T>(ICollection<IEnumerator<T>> enumerators)
+    {
+        foreach (IEnumerator<T> enumerator in enumerators)
+        {
+            if (!enumerator.MoveNext())
+            {
+                return false;
+            }
+        }
+
+        return true;
     }
 }

@@ -25,16 +25,8 @@ public static class AsyncEnumerableExtension
                 enumerators.Add(other.GetAsyncEnumerator());
             }
 
-            while (true)
+            while (await MoveNextAllEnumerators(enumerators))
             {
-                foreach (IAsyncEnumerator<T> t in enumerators)
-                {
-                    if (!await t.MoveNextAsync())
-                    {
-                        yield break;
-                    }
-                }
-
                 T[] arrays = enumerators.Select(e => e.Current).ToArray();
 
                 yield return arrays;
@@ -50,5 +42,18 @@ public static class AsyncEnumerableExtension
                 }
             }
         }
+    }
+
+    private static async ValueTask<bool> MoveNextAllEnumerators<T>(ICollection<IAsyncEnumerator<T>> enumerators)
+    {
+        foreach (IAsyncEnumerator<T> enumerator in enumerators)
+        {
+            if (!await enumerator.MoveNextAsync())
+            {
+                return false;
+            }
+        }
+
+        return true;
     }
 }
