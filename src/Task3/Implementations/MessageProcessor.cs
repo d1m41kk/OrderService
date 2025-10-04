@@ -28,8 +28,7 @@ public class MessageProcessor : IMessageSender, IMessageProcessor
                            .ChunkAsync(_options.BatchSize, _options.BatchWindow)
                            .WithCancellation(cancellationToken))
         {
-            IEnumerable<Task> tasks = _handlers.Select(handler => handler.HandleAsync(batch, cancellationToken).AsTask());
-
+            IEnumerable<Task> tasks = _handlers.Select(async handler => await handler.HandleAsync(batch, cancellationToken));
             await Task.WhenAll(tasks);
         }
     }

@@ -35,9 +35,7 @@ public static class AsyncEnumerableExtension
                     }
                 }
 
-                var arrays = new T[enumerators.Count];
-                for (int i = 0; i < enumerators.Count; i++)
-                    arrays[i] = enumerators[i].Current;
+                T[] arrays = enumerators.Select(e => e.Current).ToArray();
 
                 yield return arrays;
             }

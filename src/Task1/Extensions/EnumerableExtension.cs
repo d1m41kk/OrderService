@@ -36,9 +36,7 @@ public static class EnumerableExtension
                     }
                 }
 
-                var row = new T[enumerators.Count];
-                for (int i = 0; i < enumerators.Count; i++)
-                    row[i] = enumerators[i].Current;
+                T[] row = enumerators.Select(e => e.Current).ToArray();
 
                 yield return row;
             }

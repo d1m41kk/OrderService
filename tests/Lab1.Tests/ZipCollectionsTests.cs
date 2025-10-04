@@ -23,10 +23,13 @@ public class ZipCollectionsTests
     [Fact]
     public void Scenario1_Sync_Zip_NoArgs_ReturnsSingletons()
     {
+        // Arrange
         int[] source = [10, 20, 30];
 
+        // Act
         var rows = source.ZipCollections().ToList();
 
+        // Assert
         Assert.Equal(source.Length, rows.Count);
         foreach ((int[] row, int i) in rows.Select((r, i) => (r, i)))
         {
@@ -38,11 +41,14 @@ public class ZipCollectionsTests
     [Fact]
     public async Task Scenario1_Async_Zip_NoArgs_ReturnsSingletons()
     {
+        // Arrange
         string[] source = ["a", "b", "c"];
         IAsyncEnumerable<string> asyncSource = ToAsync(source);
 
+        // Act
         List<string[]> rows = await CollectAsync(asyncSource.AsyncZipCollections());
 
+        // Assert
         Assert.Equal(source.Length, rows.Count);
         foreach ((string[] row, int i) in rows.Select((r, i) => (r, i)))
         {
@@ -59,8 +65,10 @@ public class ZipCollectionsTests
         int n,
         int k)
     {
+        // Arrange + Act
         var rows = first.ZipCollections(others).ToList();
 
+        // Assert
         Assert.Equal(n, rows.Count);
         foreach (int[] row in rows)
             Assert.Equal(1 + k, row.Length);
@@ -80,11 +88,14 @@ public class ZipCollectionsTests
         int n,
         int k)
     {
+        // Arrange
         IAsyncEnumerable<int> firstA = ToAsync(first);
         IAsyncEnumerable<int>[] othersA = others.Select(ToAsync).ToArray();
 
+        // Act
         List<int[]> rows = await CollectAsync(firstA.AsyncZipCollections(othersA));
 
+        // Assert
         Assert.Equal(n, rows.Count);
         foreach (int[] row in rows)
             Assert.Equal(1 + k, row.Length);
@@ -103,9 +114,13 @@ public class ZipCollectionsTests
         IEnumerable<int>[] others,
         int expectedCount)
     {
+        // Arrange
         IEnumerable<int> enumerable = first as int[] ?? first.ToArray();
+
+        // Act
         var rows = enumerable.ZipCollections(others).ToList();
 
+        // Assert
         Assert.Equal(expectedCount, rows.Count);
         foreach (int[] row in rows)
             Assert.Equal(1 + others.Length, row.Length);
@@ -125,12 +140,15 @@ public class ZipCollectionsTests
         IEnumerable<int>[] others,
         int expectedCount)
     {
+        // Arrange
         IEnumerable<int> enumerable = first as int[] ?? first.ToArray();
         IAsyncEnumerable<int> firstA = ToAsync(enumerable);
         IAsyncEnumerable<int>[] othersA = others.Select(ToAsync).ToArray();
 
+        // Act
         List<int[]> rows = await CollectAsync(firstA.AsyncZipCollections(othersA));
 
+        // Assert
         Assert.Equal(expectedCount, rows.Count);
         foreach (int[] row in rows)
             Assert.Equal(1 + others.Length, row.Length);
