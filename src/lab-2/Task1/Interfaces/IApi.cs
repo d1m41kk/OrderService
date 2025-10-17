@@ -7,7 +7,7 @@ public interface IApi
 {
     [Get("/configurations?pageSize={pageSize}&pageToken={pageToken}")]
     Task<QueryConfigurationsResponse?> GetConfigsFromPageAsync(
-        [AliasAs("pageSize")]int pageSize,
-        [AliasAs("pageToken")]string? pageToken,
+        [AliasAs("pageSize")] int pageSize,
+        [AliasAs("pageToken")] string? pageToken,
         CancellationToken? cancellationToken = null);
 }

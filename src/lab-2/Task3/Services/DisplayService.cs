@@ -11,7 +11,7 @@ public class DisplayService : IDisposable
     private PeriodicTimer _renderTimer;
     private Task? _renderTask;
 
-    public DisplayService(Renderer renderer,  IOptionsMonitor<DisplayInfo> displayInfoMonitor)
+    public DisplayService(Renderer renderer, IOptionsMonitor<DisplayInfo> displayInfoMonitor)
     {
         _renderer = renderer;
         _displayInfoMonitor = displayInfoMonitor;
