@@ -5,7 +5,7 @@ namespace Task3.Services;
 
 public class Renderer
 {
-    public Task Render(DisplayInfo currentValue, CancellationToken token)
+    public async Task Render(DisplayInfo currentValue, CancellationToken token)
     {
         AnsiConsole.Clear();
         switch (currentValue.InfoType)
@@ -29,7 +29,10 @@ public class Renderer
 
             case "url":
             {
-                var image = new CanvasImage(currentValue.Info);
+                using var httpClient = new HttpClient();
+                byte[] imageBytes = await httpClient.GetByteArrayAsync(currentValue.Info, token);
+                using var stream = new MemoryStream(imageBytes);
+                var image = new CanvasImage(stream);
                 AnsiConsole.Write(image);
                 break;
             }
@@ -39,6 +42,6 @@ public class Renderer
                 break;
         }
 
-        return Task.CompletedTask;
+        await Task.CompletedTask;
     }
 }
