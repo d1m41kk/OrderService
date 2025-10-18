@@ -23,9 +23,17 @@ public class DisplayService : IDisposable
     public void Dispose()
     {
         _cancellationTokenSource.Cancel();
+
+        try
+        {
+            _renderTask?.Wait(TimeSpan.FromSeconds(3));
+        }
+        catch (AggregateException)
+        {
+        }
+
         _cancellationTokenSource.Dispose();
         _renderTimer.Dispose();
-        _renderTask?.Dispose();
     }
 
     public void StartRender()

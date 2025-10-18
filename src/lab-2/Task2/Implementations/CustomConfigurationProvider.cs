@@ -5,24 +5,17 @@ namespace Task2.Implementations;
 
 public class CustomConfigurationProvider : ConfigurationProvider
 {
-    public bool DoReload(QueryConfigurationsResponse configurations)
+    public bool DoReload(IEnumerable<ConfigurationItemDto> items)
     {
-        var newConfigs = configurations?.Items?.ToDictionary(kv => kv.Key, string? (kv) => kv.Value);
-        if (newConfigs != null && AreDictionariesEquals(Data, newConfigs))
+        var newConfigs = items.ToDictionary(kv => kv.Key, string? (kv) => kv.Value);
+        if (AreDictionariesEquals(Data, newConfigs))
         {
             return false;
         }
 
-        Data = configurations?.Items?.ToDictionary(kv => kv.Key, string? (kv) => kv.Value)
-               ?? new Dictionary<string, string?>();
-
+        Data = newConfigs;
         OnReload();
         return true;
-    }
-
-    public override void Load()
-    {
-        Data = new Dictionary<string, string?>();
     }
 
     private static bool AreDictionariesEquals(IDictionary<string, string?> first, Dictionary<string, string?> second)

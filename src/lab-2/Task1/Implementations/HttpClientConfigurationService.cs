@@ -1,3 +1,4 @@
+using System.Net.Http.Json;
 using System.Runtime.CompilerServices;
 using System.Text.Json;
 using Task1.Interfaces;
@@ -21,10 +22,10 @@ public class HttpClientConfigurationService : IConfigurationServiceClient
         string? pageToken,
         [EnumeratorCancellation] CancellationToken cancellationToken)
     {
-        QueryConfigurationsResponse response = await GetConfigsFromPageAsync(pageSize, pageToken, cancellationToken);
+        string? currentToken = pageToken;
+
         do
         {
-            string? currentToken = response.PageToken;
             QueryConfigurationsResponse next =
                 await GetConfigsFromPageAsync(pageSize, currentToken, cancellationToken);
 
@@ -35,9 +36,9 @@ public class HttpClientConfigurationService : IConfigurationServiceClient
                 yield break;
             }
 
-            response = next;
+            currentToken = next.PageToken;
         }
-        while (MoveToNextPage(response));
+        while (MoveToNextPage(await GetConfigsFromPageAsync(pageSize, currentToken, cancellationToken)));
     }
 
     private static bool MoveToNextPage(QueryConfigurationsResponse response)
@@ -50,21 +51,15 @@ public class HttpClientConfigurationService : IConfigurationServiceClient
         string? pageToken,
         CancellationToken cancellationToken)
     {
-        if (_httpClient.BaseAddress == null)
-        {
-            throw new NullReferenceException($"{nameof(_httpClient.BaseAddress)} is null");
-        }
-
-        Uri baseUri = _httpClient.BaseAddress;
+        Uri? baseUri = _httpClient.BaseAddress;
         var uri = new Uri(
-            baseUri,
+            baseUri ?? throw new InvalidOperationException(),
             $"/configurations?pageSize={pageSize}" + $"&pageToken={pageToken}");
 
         HttpResponseMessage message = await _httpClient.GetAsync(uri, cancellationToken);
-        string json = await message.Content.ReadAsStringAsync(cancellationToken);
-        object? response = JsonSerializer.Deserialize<QueryConfigurationsResponse>(
-            json,
-            _options);
-        return response == null ? throw new NullReferenceException($"{nameof(response)} is null") : (QueryConfigurationsResponse)response;
+        QueryConfigurationsResponse? response = await message.Content.ReadFromJsonAsync<QueryConfigurationsResponse>(
+            _options,
+            cancellationToken);
+        return response ?? throw new NullReferenceException($"{nameof(response)} is null");
     }
 }

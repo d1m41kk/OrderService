@@ -18,10 +18,10 @@ public class RefitClientConfigurationService : IConfigurationServiceClient
         string? pageToken,
         [EnumeratorCancellation] CancellationToken cancellationToken)
     {
-        QueryConfigurationsResponse response = await GetConfigsFromPageAsync(pageSize, pageToken, cancellationToken);
+        string? currentToken = pageToken;
+
         do
         {
-            string? currentToken = response.PageToken;
             QueryConfigurationsResponse next =
                 await GetConfigsFromPageAsync(pageSize, currentToken, cancellationToken);
 
@@ -32,9 +32,9 @@ public class RefitClientConfigurationService : IConfigurationServiceClient
                 yield break;
             }
 
-            response = next;
+            currentToken = next.PageToken;
         }
-        while (MoveToNextPage(response));
+        while (MoveToNextPage(await GetConfigsFromPageAsync(pageSize, currentToken, cancellationToken)));
     }
 
     private static bool MoveToNextPage(QueryConfigurationsResponse? response)

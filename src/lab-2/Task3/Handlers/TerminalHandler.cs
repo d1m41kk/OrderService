@@ -9,7 +9,6 @@ public class TerminalHandler : Handler
 
     public override async Task Handle(DisplayInfo displayInfo)
     {
-        // Достигнут конец цепочки - тип не поддерживается
         AnsiConsole.MarkupLine($"[red]Unsupported info type: {displayInfo.InfoType}[/]");
         await Task.CompletedTask;
     }

@@ -1,4 +1,5 @@
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Options;
 using Task1.Interfaces;
 using Task1.Models;
 
@@ -8,36 +9,45 @@ public class CustomConfigurationService : BackgroundService
 {
     private readonly CustomConfigurationProvider _provider;
     private readonly IConfigurationServiceClient _client;
-    private readonly PeriodicTimer _timer;
-    private readonly int _pageSize;
+    private readonly CustomConfigurationServiceOptions _options;
 
-    public CustomConfigurationService(CustomConfigurationProvider provider, IConfigurationServiceClient client, PeriodicTimer timer, int pageSize)
+    public CustomConfigurationService(
+        CustomConfigurationProvider provider,
+        IConfigurationServiceClient client,
+        IOptions<CustomConfigurationServiceOptions> options)
     {
         _provider = provider;
         _client = client;
-        _timer = timer;
-        _pageSize = pageSize;
+        _options = options.Value;
+    }
+
+    public override async Task StartAsync(CancellationToken cancellationToken)
+    {
+        await UpdateOnceAsync(cancellationToken);
+        await base.StartAsync(cancellationToken);
     }
 
     public async Task UpdateOnceAsync(CancellationToken token)
     {
+        var allItems = new List<ConfigurationItemDto>();
+
+        await foreach (QueryConfigurationsResponse response in _client.GetAllConfigsAsync(
+            _options.PageSize,
+            null,
+            token))
         {
-            var allItems = new List<ConfigurationItemDto>();
-
-            await foreach (QueryConfigurationsResponse response in _client.GetAllConfigsAsync(_pageSize, null, token))
-            {
-                allItems.AddRange(response.Items);
-            }
-
-            var configs = new QueryConfigurationsResponse(allItems, null);
-            _provider.DoReload(configs);
+            allItems.AddRange(response.Items);
         }
+
+        _provider.DoReload(allItems);
     }
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
+        using var timer = new PeriodicTimer(_options.RefreshInterval);
+
         await UpdateOnceAsync(stoppingToken);
-        while (await _timer.WaitForNextTickAsync(stoppingToken))
+        while (await timer.WaitForNextTickAsync(stoppingToken))
         {
             await UpdateOnceAsync(stoppingToken);
         }

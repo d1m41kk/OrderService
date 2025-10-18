@@ -1,5 +1,5 @@
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using Refit;
 using Task1.Interfaces;
 
@@ -7,20 +7,23 @@ namespace Task1.Extensions;
 
 public static class ConfigClientExtension
 {
-    public static IHttpClientFactory AddConfigClientHttp(this IServiceCollection services, IConfiguration configuration)
+    public static IHttpClientFactory AddConfigClientHttp(this IServiceCollection services)
     {
-        string baseUrl = configuration["Api:BaseAddress"] ?? "http://localhost:8080/";
-        services.AddHttpClient("client", client =>
-            client.BaseAddress = new Uri(baseUrl));
-
-        ServiceProvider serviceProvider = services.BuildServiceProvider();
-        return serviceProvider.GetRequiredService<IHttpClientFactory>();
+        services.AddHttpClient("client", (serviceProvider, client) =>
+        {
+            IOptions<ApiOptions> options = serviceProvider.GetRequiredService<IOptions<ApiOptions>>();
+            client.BaseAddress = new Uri(options.Value.BaseAddress);
+        });
+        return services.BuildServiceProvider().GetRequiredService<IHttpClientFactory>();
     }
 
-    public static IServiceCollection AddConfigClientRefit(this IServiceCollection services, IConfiguration configuration)
+    public static IServiceCollection AddConfigClientRefit(this IServiceCollection services)
     {
-        string baseUrl = configuration["Api:BaseAddress"] ?? "http://localhost:8080/";
-        services.AddRefitClient<IRefitClientConfigurationServiceApi>().ConfigureHttpClient(client => client.BaseAddress = new Uri(baseUrl));
+        services.AddRefitClient<IRefitClientConfigurationServiceApi>().ConfigureHttpClient((serviceProvider, client) =>
+        {
+            IOptions<ApiOptions> options = serviceProvider.GetRequiredService<IOptions<ApiOptions>>();
+            client.BaseAddress = new Uri(options.Value.BaseAddress);
+        });
         return services;
     }
 }
