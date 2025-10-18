@@ -23,7 +23,7 @@ public class Base64Handler : Handler
         }
         else
         {
-           await _next.Handle(displayInfo);
+            await _next.Handle(displayInfo);
         }
     }
 }

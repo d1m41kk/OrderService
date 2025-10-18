@@ -17,7 +17,7 @@ public static class ConfigClientExtension
         return serviceProvider.GetRequiredService<IHttpClientFactory>();
     }
 
-    public static IServiceCollection AddConfigClientRefit(this IServiceCollection services,  IConfiguration configuration)
+    public static IServiceCollection AddConfigClientRefit(this IServiceCollection services, IConfiguration configuration)
     {
         string baseUrl = configuration["Api:BaseAddress"] ?? "http://localhost:8080/";
         services.AddRefitClient<IRefitClientConfigurationServiceApi>().ConfigureHttpClient(client => client.BaseAddress = new Uri(baseUrl));
