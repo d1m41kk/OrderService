@@ -8,14 +8,14 @@ namespace Lab2.Tests;
 
 public class ProviderTests : IDisposable
 {
-    private readonly Mock<IConfigsClient> _mockClient;
+    private readonly Mock<IConfigurationServiceClient> _mockClient;
     private readonly CustomConfigurationProvider _provider;
     private readonly PeriodicTimer _timer;
     private readonly CustomConfigurationService _service;
 
     public ProviderTests()
     {
-        _mockClient = new Mock<IConfigsClient>();
+        _mockClient = new Mock<IConfigurationServiceClient>();
         _provider = new CustomConfigurationProvider();
         _timer = new PeriodicTimer(TimeSpan.FromMinutes(1));
         _service = new CustomConfigurationService(_provider, _mockClient.Object, _timer, 1);
@@ -124,13 +124,13 @@ public class ProviderTests : IDisposable
 
     private void SetupClientResponse(QueryConfigurationsResponse response)
     {
-        IAsyncEnumerable<QueryConfigurationsResponse?> asyncEnumerable = CreateAsyncEnumerable(response);
+        IAsyncEnumerable<QueryConfigurationsResponse> asyncEnumerable = CreateAsyncEnumerable(response);
         _mockClient
             .Setup(c => c.GetAllConfigsAsync(It.IsAny<int>(), It.IsAny<string?>(), It.IsAny<CancellationToken>()))
             .Returns(asyncEnumerable);
     }
 
-    private async IAsyncEnumerable<QueryConfigurationsResponse?> CreateAsyncEnumerable(QueryConfigurationsResponse response)
+    private async IAsyncEnumerable<QueryConfigurationsResponse> CreateAsyncEnumerable(QueryConfigurationsResponse response)
     {
         yield return response;
         await Task.CompletedTask;

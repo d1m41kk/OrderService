@@ -1,5 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Task1.Extensions;
 using Task1.Implementations;
 using Task1.Interfaces;
@@ -7,42 +9,41 @@ using Task2.Implementations;
 using Task3.Models;
 using Task3.Services;
 
-var configurationBuilder = new ConfigurationBuilder();
-var customProvider = new CustomConfigurationProvider();
-configurationBuilder.Add(new CustomConfigurationProviderSource(customProvider));
-IConfiguration configuration = configurationBuilder.Build();
+IHost host = Host.CreateDefaultBuilder()
+    .ConfigureServices((_, services) =>
+    {
+        var configurationBuilder = new ConfigurationBuilder();
+        var customProvider = new CustomConfigurationProvider();
+        configurationBuilder.Add(new CustomConfigurationProviderSource(customProvider));
+        IConfiguration configuration = configurationBuilder.Build();
 
-var services = new ServiceCollection();
-services.AddSingleton(configuration);
-services.AddSingleton(customProvider);
+        services.AddSingleton(configuration);
+        services.AddSingleton(customProvider);
+        services.Configure<DisplayInfo>(configuration.GetSection("Display"));
+        services.AddConfigClientRefit(configuration);
+        services.AddTransient<IConfigurationServiceClient, RefitClientConfigurationService>();
+        services.AddSingleton<Renderer>();
+        services.AddSingleton<DisplayService>();
 
-services.Configure<DisplayInfo>(configuration.GetSection("Display"));
+        services.AddHostedService(sp =>
+        {
+            CustomConfigurationProvider provider = sp.GetRequiredService<CustomConfigurationProvider>();
+            IConfigurationServiceClient client = sp.GetRequiredService<IConfigurationServiceClient>();
+            var timer = new PeriodicTimer(TimeSpan.FromSeconds(1));
+            int pageSize = 1;
+            return new CustomConfigurationService(provider, client, timer, pageSize);
+        });
+    })
+    .ConfigureLogging(logging =>
+    {
+        logging.ClearProviders();
+    })
+    .UseConsoleLifetime()
+    .Build();
 
-services.AddConfigClientRefit();
-services.AddTransient<IConfigsClient, ConfigClientRefit>();
+DisplayService displayService = host.Services.GetRequiredService<DisplayService>();
+displayService.StartRender();
 
-services.AddSingleton<Renderer>();
-services.AddSingleton<DisplayService>();
+Console.WriteLine("Application is running. Press Ctrl+C to exit.");
 
-services.AddSingleton(sp =>
-{
-    CustomConfigurationProvider provider = sp.GetRequiredService<CustomConfigurationProvider>();
-    IConfigsClient client = sp.GetRequiredService<IConfigsClient>();
-    var timer = new PeriodicTimer(TimeSpan.FromSeconds(1));
-    int pageSize = 1;
-    return new CustomConfigurationService(provider, client, timer, pageSize);
-});
-
-ServiceProvider sp = services.BuildServiceProvider();
-
-sp.GetRequiredService<CustomConfigurationService>().StartUpdating();
-sp.GetRequiredService<DisplayService>().StartRender();
-
-Console.WriteLine("Running without Generic Host. Press Ctrl+C to exit.");
-var done = new ManualResetEventSlim(false);
-Console.CancelKeyPress += (_, e) =>
-{
-    e.Cancel = true;
-    done.Set();
-};
-done.Wait();
+await host.RunAsync();

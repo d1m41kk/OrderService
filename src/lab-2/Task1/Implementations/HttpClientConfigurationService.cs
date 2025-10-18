@@ -5,35 +5,28 @@ using Task1.Models;
 
 namespace Task1.Implementations;
 
-public class ConfigClientHttp : IConfigsClient
+public class HttpClientConfigurationService : IConfigurationServiceClient
 {
     private readonly JsonSerializerOptions? _options;
     private readonly HttpClient _httpClient;
 
-    public ConfigClientHttp(HttpClient httpClient)
+    public HttpClientConfigurationService(HttpClient httpClient)
     {
         _httpClient = httpClient;
         _options = new JsonSerializerOptions(JsonSerializerDefaults.Web);
     }
 
-    public async IAsyncEnumerable<QueryConfigurationsResponse?> GetAllConfigsAsync(
+    public async IAsyncEnumerable<QueryConfigurationsResponse> GetAllConfigsAsync(
         int pageSize,
         string? pageToken,
         [EnumeratorCancellation] CancellationToken cancellationToken)
     {
-        QueryConfigurationsResponse? response = await GetConfigsFromPageAsync(pageSize, pageToken, cancellationToken);
-        yield return response;
-
-        while (MoveToNextPage(response))
+        QueryConfigurationsResponse response = await GetConfigsFromPageAsync(pageSize, pageToken, cancellationToken);
+        do
         {
-            string? currentToken = response?.PageToken;
-            QueryConfigurationsResponse? next =
+            string? currentToken = response.PageToken;
+            QueryConfigurationsResponse next =
                 await GetConfigsFromPageAsync(pageSize, currentToken, cancellationToken);
-
-            if (next == null)
-            {
-                yield break;
-            }
 
             yield return next;
 
@@ -44,9 +37,15 @@ public class ConfigClientHttp : IConfigsClient
 
             response = next;
         }
+        while (MoveToNextPage(response));
     }
 
-    public async ValueTask<QueryConfigurationsResponse?> GetConfigsFromPageAsync(
+    private static bool MoveToNextPage(QueryConfigurationsResponse response)
+    {
+        return response.PageToken != null;
+    }
+
+    private async ValueTask<QueryConfigurationsResponse> GetConfigsFromPageAsync(
         int pageSize,
         string? pageToken,
         CancellationToken cancellationToken)
@@ -66,11 +65,6 @@ public class ConfigClientHttp : IConfigsClient
         object? response = JsonSerializer.Deserialize<QueryConfigurationsResponse>(
             json,
             _options);
-        return (QueryConfigurationsResponse?)response;
-    }
-
-    private static bool MoveToNextPage(QueryConfigurationsResponse? response)
-    {
-        return response?.PageToken != null;
+        return response == null ? throw new NullReferenceException($"{nameof(response)} is null") : (QueryConfigurationsResponse)response;
     }
 }
