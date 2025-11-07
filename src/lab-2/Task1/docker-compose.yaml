@@ -24,7 +24,20 @@ services:
       - '8080:8080'
     environment:
       Persistence__Postgres__Host: postgres
+  
+  test-postgres:
+    image: postgres:latest
+    container_name: lab-3-test-postgres
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=lab-3-test-postgres-db
+    ports:
+      - "5433:5432"
+    restart: unless-stopped
+    networks:
+      - configuration-service-network
 
 networks:
   configuration-service-network:
-    driver: bridge
+    driver: bridge  

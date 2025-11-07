@@ -1,0 +1,28 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+    <PropertyGroup>
+        <TargetFramework>net9.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="FluentMigrator"/>
+        <PackageReference Include="FluentMigrator.Extensions.Postgres"/>
+        <PackageReference Include="FluentMigrator.Runner.Core"/>
+        <PackageReference Include="FluentMigrator.Runner.Postgres"/>
+        <PackageReference Include="Google.Protobuf"/>
+        <PackageReference Include="Grpc.AspNetCore"/>
+        <PackageReference Include="Npgsql"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\..\lab-2\Task2\Task2.csproj"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <Folder Include="Infrastructure\"/>
+        <Protobuf Include="Presentation/Grpc/Protos/orders.proto" GrpcServices="Server" />
+    </ItemGroup>
+
+</Project>
