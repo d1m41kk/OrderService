@@ -135,7 +135,7 @@ public class ProviderTests : IDisposable
         var page1 = new QueryConfigurationsResponse([new ConfigurationItemDto("key1", "value1")], "token1");
         var page2 = new QueryConfigurationsResponse([new ConfigurationItemDto("key2", "value2")], null);
 
-        _mockClient.GetAllConfigsAsync(Arg.Any<int>(), Arg.Any<string?>(), Arg.Any<CancellationToken>())
+        _mockClient.GetAllConfigsAsync(Arg.Any<CancellationToken>())
             .Returns(CreateAsyncEnumerable(page1, page2));
 
         // Act
@@ -153,7 +153,7 @@ public class ProviderTests : IDisposable
 
     private void SetupClientResponse(QueryConfigurationsResponse response)
     {
-        _mockClient.GetAllConfigsAsync(Arg.Any<int>(), Arg.Any<string?>(), Arg.Any<CancellationToken>())
+        _mockClient.GetAllConfigsAsync(Arg.Any<CancellationToken>())
             .Returns(CreateAsyncEnumerable(response));
     }
 

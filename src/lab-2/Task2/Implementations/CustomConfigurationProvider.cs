@@ -20,6 +20,24 @@ public class CustomConfigurationProvider : ConfigurationProvider
 
     private static bool AreDictionariesEquals(IDictionary<string, string?> first, Dictionary<string, string?> second)
     {
-        return first.Count == second.Count && first.All(valuePair => valuePair.Value == second[valuePair.Key]);
+        if (first.Count != second.Count)
+        {
+            return false;
+        }
+
+        foreach (KeyValuePair<string, string?> kvp in first)
+        {
+            if (!second.TryGetValue(kvp.Key, out string? secondValue))
+            {
+                return false;
+            }
+
+            if (kvp.Value != secondValue)
+            {
+                return false;
+            }
+        }
+
+        return true;
     }
 }

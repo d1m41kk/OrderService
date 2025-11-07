@@ -18,11 +18,10 @@ public class HttpClientConfigurationService : IConfigurationServiceClient
     }
 
     public async IAsyncEnumerable<QueryConfigurationsResponse> GetAllConfigsAsync(
-        int pageSize,
-        string? pageToken,
         [EnumeratorCancellation] CancellationToken cancellationToken)
     {
-        string? currentToken = pageToken;
+        string? currentToken = null;
+        const int pageSize = 100;
 
         do
         {
@@ -31,19 +30,14 @@ public class HttpClientConfigurationService : IConfigurationServiceClient
 
             yield return next;
 
-            if (next.PageToken == currentToken)
+            if (next.PageToken == currentToken || string.IsNullOrEmpty(next.PageToken))
             {
                 yield break;
             }
 
             currentToken = next.PageToken;
         }
-        while (MoveToNextPage(await GetConfigsFromPageAsync(pageSize, currentToken, cancellationToken)));
-    }
-
-    private static bool MoveToNextPage(QueryConfigurationsResponse response)
-    {
-        return response.PageToken != null;
+        while (true);
     }
 
     private async ValueTask<QueryConfigurationsResponse> GetConfigsFromPageAsync(

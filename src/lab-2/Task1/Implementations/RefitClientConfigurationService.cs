@@ -14,11 +14,10 @@ public class RefitClientConfigurationService : IConfigurationServiceClient
     }
 
     public async IAsyncEnumerable<QueryConfigurationsResponse> GetAllConfigsAsync(
-        int pageSize,
-        string? pageToken,
         [EnumeratorCancellation] CancellationToken cancellationToken)
     {
-        string? currentToken = pageToken;
+        string? currentToken = null;
+        const int pageSize = 100;
 
         do
         {

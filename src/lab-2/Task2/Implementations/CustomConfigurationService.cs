@@ -31,10 +31,7 @@ public class CustomConfigurationService : BackgroundService
     {
         var allItems = new List<ConfigurationItemDto>();
 
-        await foreach (QueryConfigurationsResponse response in _client.GetAllConfigsAsync(
-            _options.PageSize,
-            null,
-            token))
+        await foreach (QueryConfigurationsResponse response in _client.GetAllConfigsAsync(token))
         {
             allItems.AddRange(response.Items);
         }
@@ -46,7 +43,6 @@ public class CustomConfigurationService : BackgroundService
     {
         using var timer = new PeriodicTimer(_options.RefreshInterval);
 
-        await UpdateOnceAsync(stoppingToken);
         while (await timer.WaitForNextTickAsync(stoppingToken))
         {
             await UpdateOnceAsync(stoppingToken);
