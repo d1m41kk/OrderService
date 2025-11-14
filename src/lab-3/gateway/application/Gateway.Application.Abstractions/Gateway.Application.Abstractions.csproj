@@ -1,0 +1,8 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\..\orders-service\presentation\OrdersService.Presentation\OrdersService.Presentation.csproj" />
+      <ProjectReference Include="..\Gateway.Application.Models\Gateway.Application.Models.csproj" />
+    </ItemGroup>
+
+</Project>

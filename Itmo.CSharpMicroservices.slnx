@@ -11,9 +11,26 @@
     <Project Path="src\lab-2\Task2\Task2.csproj" Type="Classic C#" />
     <Project Path="src\lab-2\Task3\Task3.csproj" Type="Classic C#" />
   </Folder>
-  <Folder Name="/src/lab-3/">
-    <Project Path="src\lab-3\HttpGateway\HttpGateway.csproj" Type="Classic C#" />
-    <Project Path="src\lab-3\Task1Web\Task1Web.csproj" Type="Classic C#" />
+  <Folder Name="/src/lab-3/" />
+  <Folder Name="/src/lab-3/gateway/" />
+  <Folder Name="/src/lab-3/gateway/application/">
+    <Project Path="src\lab-3\gateway\application\Gateway.Application.Abstractions\Gateway.Application.Abstractions.csproj" Type="Classic C#" />
+    <Project Path="src\lab-3\gateway\application\Gateway.Application.Models\Gateway.Application.Models.csproj" Type="Classic C#" />
+  </Folder>
+  <Folder Name="/src/lab-3/gateway/presentation/">
+    <Project Path="src\lab-3\gateway\presentation\Gateway.Presentation\Gateway.Presentation.csproj" Type="Classic C#" />
+  </Folder>
+  <Folder Name="/src/lab-3/orders-service/" />
+  <Folder Name="/src/lab-3/orders-service/application/">
+    <Project Path="src\lab-3\orders-service\application\OrdersService.Application.Abstractions\OrdersService.Application.Abstractions.csproj" Type="Classic C#" />
+    <Project Path="src\lab-3\orders-service\application\OrdersService.Application.Models\OrdersService.Application.Models.csproj" Type="Classic C#" />
+    <Project Path="src\lab-3\orders-service\application\OrdersService.Application\OrdersService.Application.csproj" Type="Classic C#" />
+  </Folder>
+  <Folder Name="/src/lab-3/orders-service/infrastructure/">
+    <Project Path="src\lab-3\orders-service\infrastructure\OrdersService.Infrastructure\OrdersService.Infrastructure.csproj" Type="Classic C#" />
+  </Folder>
+  <Folder Name="/src/lab-3/orders-service/presentation/">
+    <Project Path="src\lab-3\orders-service\presentation\OrdersService.Presentation\OrdersService.Presentation.csproj" Type="Classic C#" />
   </Folder>
   <Folder Name="/src/lab-4/" />
   <Folder Name="/src/lab-5/" />
