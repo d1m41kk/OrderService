@@ -12,11 +12,52 @@
     <Project Path="src\lab-2\Task3\Task3.csproj" Type="Classic C#" />
   </Folder>
   <Folder Name="/src/lab-3/" />
+  <Folder Name="/src/lab-3/gateway/" />
+  <Folder Name="/src/lab-3/gateway/application/">
+    <Project Path="src\lab-3\gateway\application\Gateway.Application.Abstractions\Gateway.Application.Abstractions.csproj" Type="Classic C#" />
+    <Project Path="src\lab-3\gateway\application\Gateway.Application.Models\Gateway.Application.Models.csproj" Type="Classic C#" />
+  </Folder>
+  <Folder Name="/src/lab-3/gateway/presentation/">
+    <Project Path="src\lab-3\gateway\presentation\Gateway.Presentation\Gateway.Presentation.csproj" Type="Classic C#" />
+  </Folder>
+  <Folder Name="/src/lab-3/orders-service/" />
+  <Folder Name="/src/lab-3/orders-service/application/">
+    <Project Path="src\lab-3\orders-service\application\OrdersService.Application.Abstractions\OrdersService.Application.Abstractions.csproj" Type="Classic C#" />
+    <Project Path="src\lab-3\orders-service\application\OrdersService.Application.Models\OrdersService.Application.Models.csproj" Type="Classic C#" />
+    <Project Path="src\lab-3\orders-service\application\OrdersService.Application\OrdersService.Application.csproj" Type="Classic C#" />
+  </Folder>
+  <Folder Name="/src/lab-3/orders-service/infrastructure/">
+    <Project Path="src\lab-3\orders-service\infrastructure\OrdersService.Infrastructure\OrdersService.Infrastructure.csproj" Type="Classic C#" />
+  </Folder>
+  <Folder Name="/src/lab-3/orders-service/presentation/">
+    <Project Path="src\lab-3\orders-service\presentation\OrdersService.Presentation\OrdersService.Presentation.csproj" Type="Classic C#" />
+  </Folder>
   <Folder Name="/src/lab-4/" />
+  <Folder Name="/src/lab-4/orders-creation-service/" />
+  <Folder Name="/src/lab-4/orders-creation-service/application/">
+    <Project Path="src\lab-4\orders-creation-service\application\OrdersCreationService.Application.Abstractions\OrdersCreationService.Application.Abstractions.csproj" Type="Classic C#" />
+    <Project Path="src\lab-4\orders-creation-service\application\OrdersCreationService.Application.Models\OrdersCreationService.Application.Models.csproj" Type="Classic C#" />
+    <Project Path="src\lab-4\orders-creation-service\application\OrdersCreationService.Application\OrdersCreationService.Application.csproj" Type="Classic C#" />
+  </Folder>
+  <Folder Name="/src/lab-4/orders-creation-service/infrastructure/">
+    <Project Path="src\lab-4\orders-creation-service\infrastructure\OrdersCreationService.Infrastructure\OrdersCreationService.Infrastructure.csproj" Type="Classic C#" />
+  </Folder>
+  <Folder Name="/src/lab-4/orders-creation-service/presentation/">
+    <Project Path="src\lab-4\orders-creation-service\presentation\OrdersCreationService.Presentation\OrdersCreationService.Presentation.csproj" Type="Classic C#" />
+  </Folder>
+  <Folder Name="/src/lab-4/orders-service-gateway/" />
+  <Folder Name="/src/lab-4/orders-service-gateway/application/">
+    <Project Path="src\lab-4\orders-service-gateway\application\OrdersServiceGateway.Application.Abstractions\OrdersServiceGateway.Application.Abstractions.csproj" Type="Classic C#" />
+    <Project Path="src\lab-4\orders-service-gateway\application\OrdersServiceGateway.Application.Models\OrdersServiceGateway.Application.Models.csproj" Type="Classic C#" />
+  </Folder>
+  <Folder Name="/src/lab-4/orders-service-gateway/presentation/">
+    <Project Path="src\lab-4\orders-service-gateway\presentation\OrdersServiceGateway.Presentation\OrdersServiceGateway.Presentation.csproj" Type="Classic C#" />
+  </Folder>
   <Folder Name="/src/lab-5/" />
   <Folder Name="/tests/">
     <Project Path="tests\Lab1.Tests\Lab1.Tests.csproj" Type="Classic C#" />
     <Project Path="tests\Lab2.Tests\Lab2.Tests.csproj" Type="Classic C#" />
+    <Project Path="tests\lab3-task-1-application\lab3-task-1-application.csproj" Type="Classic C#" />
     <Project Path="tests\Lab3.Tests\Lab3.Tests.csproj" Type="Classic C#" />
     <Project Path="tests\Lab4.Tests\Lab4.Tests.csproj" Type="Classic C#" />
     <Project Path="tests\Lab5.Tests\Lab5.Tests.csproj" Type="Classic C#" />

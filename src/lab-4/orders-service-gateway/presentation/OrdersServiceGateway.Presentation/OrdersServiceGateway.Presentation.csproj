@@ -1,0 +1,30 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+    <PropertyGroup>
+        <TargetFramework>net9.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+    </PropertyGroup>
+    <ItemGroup>
+        <PackageReference Include="Google.Protobuf" />
+        <PackageReference Include="Grpc.Net.Client"/>
+        <PackageReference Include="Grpc.Tools">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen"/>
+        <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI"/>
+    </ItemGroup>
+    <ItemGroup>
+      <ProjectReference Include="..\..\..\orders-creation-service\application\OrdersCreationService.Application\OrdersCreationService.Application.csproj" />
+      <ProjectReference Include="..\..\..\orders-creation-service\infrastructure\OrdersCreationService.Infrastructure\OrdersCreationService.Infrastructure.csproj" />
+      <ProjectReference Include="..\..\application\OrdersServiceGateway.Application.Abstractions\OrdersServiceGateway.Application.Abstractions.csproj" />
+      <ProjectReference Include="..\..\application\OrdersServiceGateway.Application.Models\OrdersServiceGateway.Application.Models.csproj" />
+    </ItemGroup>
+    <ItemGroup>
+        <Protobuf Include="Protos\orders.proto" GrpcServices="Client" />
+        <Protobuf Include="Protos\orders_creation_service.proto" GrpcServices="Client" />
+        <Protobuf Include="Protos\order_processing.proto" GrpcServices="Client" />
+        <Protobuf Include="Protos\order_creation.proto" GrpcServices="Client" />
+    </ItemGroup>
+</Project>

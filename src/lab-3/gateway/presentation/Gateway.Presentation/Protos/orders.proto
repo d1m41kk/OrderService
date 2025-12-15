@@ -1,0 +1,123 @@
+syntax = "proto3";
+package sample.api.contracts;
+option csharp_namespace = "Gateway.Presentation.Protos";
+import "google/protobuf/timestamp.proto";
+
+service OrderService{
+  rpc CreateOrder(CreateOrderRequest) returns (CreateOrderResponse);
+  rpc AddProductToOrder (AddProductRequest) returns (AddProductResponse);
+  rpc RemoveProductFromOrder (RemoveProductRequest) returns (RemoveProductResponse);
+  rpc ChangeOrderStatus (ChangeStatusRequest) returns (ChangeStatusResponse);
+  rpc GetOrderHistory (GetHistoryRequest) returns (GetHistoryResponse);
+}
+
+service ProductService {
+  rpc CreateProduct (CreateProductRequest) returns (CreateProductResponse);
+}
+
+message CreateOrderRequest {
+  string created_by = 1;
+}
+
+message CreateOrderResponse {
+  int64 order_id = 1;
+}
+
+message AddProductRequest {
+  int64 order_id = 1;
+  int64 product_id = 2;
+  int32 quantity = 3;
+}
+
+message AddProductResponse {
+  bool success = 1;
+}
+
+message RemoveProductRequest {
+  int64 order_id = 1;
+  int64 product_id = 2;
+}
+
+message RemoveProductResponse {
+  bool success = 1;
+}
+
+message ChangeStatusRequest {
+  int64 order_id = 1;
+  OrderStatus status = 2;
+}
+
+message ChangeStatusResponse {
+  bool success = 1;
+}
+
+message GetHistoryRequest {
+  int64 order_id = 1;
+  optional HistoryItemKind kind = 2;
+  int32 page_size = 3;
+  string page_token = 4;
+}
+
+message GetHistoryResponse {
+  repeated HistoryItem history_items = 1;
+  string next_page_token = 2;
+}
+
+message CreateProductRequest {
+  string name = 1;
+  double price = 2;
+}
+
+message CreateProductResponse {
+  int64 product_id = 1;
+}
+
+enum OrderStatus {
+  ORDER_STATUS_UNSPECIFIED = 0;
+  ORDER_STATUS_CREATED = 1;
+  ORDER_STATUS_PROCESSING = 2;
+  ORDER_STATUS_COMPLETED = 3;
+  ORDER_STATUS_CANCELLED = 4;
+}
+
+enum HistoryItemKind {
+  HISTORY_ITEM_KIND_UNSPECIFIED = 0;
+  HISTORY_ITEM_KIND_CREATED_ITEM = 1;
+  HISTORY_ITEM_KIND_ITEM_ADDED = 2;
+  HISTORY_ITEM_KIND_ITEM_REMOVED = 3;
+  HISTORY_ITEM_KIND_STATE_CHANGED = 4;
+}
+
+message HistoryItem {
+  int64 id = 1;
+  int64 order_id = 2;
+  google.protobuf.Timestamp created_at = 3;
+  HistoryItemKind kind = 4;
+  oneof payload {
+    OrderCreatedPayload order_created = 5;
+    ItemAddedPayload item_added = 6;
+    ItemRemovedPayload item_removed = 7;
+    StateChangedPayload state_changed = 8;
+  }
+}
+
+message OrderCreatedPayload {
+  string created_by = 1;
+  google.protobuf.Timestamp created_at = 2;
+}
+
+message ItemAddedPayload {
+  int64 product_id = 1;
+  int32 quantity = 2;
+  google.protobuf.Timestamp created_at = 3;
+}
+
+message ItemRemovedPayload {
+  int64 product_id = 1;
+  google.protobuf.Timestamp created_at = 2;
+}
+
+message StateChangedPayload {
+  OrderStatus old_state = 1;
+  OrderStatus new_state = 2;
+}

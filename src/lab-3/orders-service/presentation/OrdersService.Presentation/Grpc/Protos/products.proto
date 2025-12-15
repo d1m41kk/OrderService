@@ -1,0 +1,16 @@
+syntax = "proto3";
+package sample.api.contracts;
+option csharp_namespace = "OrdersService.Presentation.Grpc";
+
+service ProductService {
+  rpc CreateProduct (CreateProductRequest) returns (CreateProductResponse);
+}
+
+message CreateProductRequest {
+  string name = 1;
+  double price = 2;
+}
+
+message CreateProductResponse {
+  int64 product_id = 1;
+}

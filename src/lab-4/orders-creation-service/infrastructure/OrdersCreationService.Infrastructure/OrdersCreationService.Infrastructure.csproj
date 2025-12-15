@@ -1,0 +1,23 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net9.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\application\OrdersCreationService.Application.Abstractions\OrdersCreationService.Application.Abstractions.csproj" />
+      <ProjectReference Include="..\..\application\OrdersCreationService.Application.Models\OrdersCreationService.Application.Models.csproj" />
+      <ProjectReference Include="..\..\application\OrdersCreationService.Application\OrdersCreationService.Application.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="FluentMigrator.Extensions.Postgres" />
+      <PackageReference Include="FluentMigrator.Runner.Core" />
+      <PackageReference Include="FluentMigrator.Runner.Postgres" />
+      <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" />
+      <PackageReference Include="Npgsql" />
+    </ItemGroup>
+
+</Project>

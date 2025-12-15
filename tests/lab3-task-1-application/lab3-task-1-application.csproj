@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+    <PropertyGroup>
+        <TargetFramework>net9.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <RootNamespace>lab2_task_1_application</RootNamespace>
+        <NoWarn>$(NoWarn);CA1506</NoWarn>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\src\lab-2\Task1\Task1.csproj" />
+      <ProjectReference Include="..\..\src\lab-2\Task2\Task2.csproj" />
+      <ProjectReference Include="..\..\src\lab-3\orders-service\infrastructure\OrdersService.Infrastructure\OrdersService.Infrastructure.csproj" />
+    </ItemGroup>
+
+</Project>

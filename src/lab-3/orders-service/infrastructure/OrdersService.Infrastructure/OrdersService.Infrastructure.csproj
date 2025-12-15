@@ -1,0 +1,16 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\application\OrdersService.Application.Abstractions\OrdersService.Application.Abstractions.csproj" />
+      <ProjectReference Include="..\..\application\OrdersService.Application\OrdersService.Application.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="FluentMigrator.Extensions.Postgres" />
+      <PackageReference Include="FluentMigrator.Runner.Core" />
+      <PackageReference Include="FluentMigrator.Runner.Postgres" />
+      <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" />
+      <PackageReference Include="Npgsql" />
+    </ItemGroup>
+
+</Project>
